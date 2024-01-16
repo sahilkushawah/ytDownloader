@@ -18,9 +18,11 @@ app.get("/get", (req, res) => {
 
 app.get("/download", async (req, res) => {
 	const v_id = req.query.url.split('v=')[1];
+    console.log('v_id',v_id);
     const info = await ytdl.getInfo(req.query.url);
-
+    console.log('ionfo',info);
     const videoFormats = info.formats.filter(format => !format.hasAudio);
+    console.log('videoFormats'.videoFormats);
 
 	return res.render("download", {
 		url: "https://www.youtube.com/embed/" + v_id,
