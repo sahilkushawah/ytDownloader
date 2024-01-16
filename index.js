@@ -17,18 +17,24 @@ app.get("/get", (req, res) => {
 });
 
 app.get("/download", async (req, res) => {
-	const v_id = req.query.url.split('v=')[1];
-    console.log('v_id',v_id);
-    const info = await ytdl.getInfo(req.query.url);
-    console.log('ionfo',info);
-    const videoFormats = info.formats.filter(format => !format.hasAudio);
-    console.log('videoFormats'.videoFormats);
+    const v_id = req.query.url.split('v=')[1];
+    console.log('v_id', v_id);
 
-	return res.render("download", {
-		url: "https://www.youtube.com/embed/" + v_id,
-        info: videoFormats
-	});
+    try {
+        const info = await ytdl.getInfo(req.query.url);
+        const videoFormats = info.formats.filter(format => !format.hasAudio);
+        console.log('videoFormats', videoFormats);
+
+        return res.render("download", {
+            url: "https://www.youtube.com/embed/" + v_id,
+            info: videoFormats
+        });
+    } catch (error) {
+        console.error('Error fetching video information:', error);
+        return res.status(500).send('Error fetching video information');
+    }
 });
+
 app.listen(7000, () => {
 	console.log("Server is running on http://localhost:7000");
 });
