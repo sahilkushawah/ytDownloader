@@ -31,7 +31,14 @@ app.get("/download", async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching video information:', error);
-        return res.status(500).send('Error fetching video information');
+
+        if (error.statusCode === 410) {
+            // Handle the specific case of a 410 status code (Gone)
+            return res.status(404).send('Video not found');
+        } else {
+            // Handle other errors
+            return res.status(500).send('Error fetching video information');
+        }
     }
 });
 
