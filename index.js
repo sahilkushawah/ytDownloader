@@ -20,8 +20,14 @@ app.get("/download", async (req, res) => {
     const v_id = req.query.url.split('v=')[1];
     console.log('v_id', v_id);
 
+    const url = new URL(req.query.url);
+    
+    // Set additional parameters
+    url.searchParams.set('c', 'TVHTML5');
+    url.searchParams.set('cver', '7.20190319');
+
     try {
-        const info = await ytdl.getInfo(req.query.url);
+        const info = await ytdl.getInfo(url.href);
         console.log('information', info);
         const videoFormats = info.formats.filter(format => format.hasVideo && format.hasAudio);
         console.log('videoFormats', videoFormats);
