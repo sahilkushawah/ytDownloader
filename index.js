@@ -22,13 +22,17 @@ app.get("/download", async (req, res) => {
 
     try {
         const info = await ytdl.getInfo(req.query.url);
-        const videoFormats = info.formats.filter(format => !format.hasAudio);
+        const videoFormats = info.formats.filter(format => format.hasVideo && format.hasAudio);
         console.log('videoFormats', videoFormats);
 
-        return res.render("download", {
-            url: "https://www.youtube.com/embed/" + v_id,
-            info: videoFormats
-        });
+        if (videoFormats.length > 0) {
+            return res.render("download", {
+                url: "https://www.youtube.com/embed/" + v_id,
+                info: videoFormats
+            });
+        } else {
+            return res.status(404).send('No video format with both video and audio found');
+        }
     } catch (error) {
         console.error('Error fetching video information:', error);
 
