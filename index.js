@@ -22,6 +22,7 @@ app.get("/download", async (req, res) => {
 
     try {
         const info = await ytdl.getInfo(req.query.url);
+        console.log('information', info);
         const videoFormats = info.formats.filter(format => format.hasVideo && format.hasAudio);
         console.log('videoFormats', videoFormats);
 
